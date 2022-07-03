@@ -23,5 +23,17 @@ public class LoginPage {
     @FindBy(xpath = "//span[@class='oe_topbar_name']")
     public WebElement salesUserPage;
 
+    @FindBy(xpath = "//p[@class='alert alert-danger']")
+    public WebElement alert;
+
+    @FindBy(xpath = "//a[text()='Reset Password']")
+    public WebElement resetButton;
+
+
+
+
+
+
+
 
 }

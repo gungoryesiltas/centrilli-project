@@ -11,40 +11,40 @@ public class Driver {
 
     private Driver() {}
 
-    private static WebDriver driver;
+    private static InheritableThreadLocal<WebDriver> driverpool = new InheritableThreadLocal<>();
 
     public static WebDriver callDriver(){
 
-        if(driver==null){
+        if(driverpool.get()==null){
             String browserType = ConfigurationReader.getProperty("browser");
 
             switch (browserType){
 
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                    driverpool.set(new ChromeDriver());
+                    driverpool.get().manage().window().maximize();
+                    driverpool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
                     break;
 
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
-                    driver = new FirefoxDriver();
-                    driver.manage().window().maximize();
-                    driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+                    driverpool.set(new FirefoxDriver());
+                    driverpool.get().manage().window().maximize();
+                    driverpool.get().manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
                     break;
             }
 
 
         }
-        return driver;
+        return driverpool.get();
 
     }
 
     public static void closeDriver(){
-        if(driver!=null){
-            driver.quit();
-            driver=null;
+        if(driverpool.get()!=null){
+            driverpool.get().quit();
+            driverpool.remove();
 
         }
     }
